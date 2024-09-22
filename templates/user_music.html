@@ -91,7 +91,8 @@
         <!-- Search bar -->
         <div class="search-bar">
             <form action="/user/{{ username }}" method="GET">
-                <input type="text" name="search" placeholder="Search for a song..." value="{{ search_query }}">
+                <input type="text" name="search" placeholder="Search for a song..."
+               value="{% if search_query %}{{ search_query }}{% else %}{% endif %}">
             </form>
         </div>
 
