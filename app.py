@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request
 import os
 
 app = Flask(__name__)
@@ -14,11 +14,15 @@ def index():
 
 @app.route('/user/<username>')
 def user_music(username):
-    # List all music files in the user's folder
+    # Get all music files in the user's folder
     user_folder = os.path.join(app.config['MUSIC_FOLDER'], username)
     if os.path.exists(user_folder):
         songs = [song for song in os.listdir(user_folder) if song.endswith(('.mp3', '.wav'))]
-        return render_template('user_music.html', username=username, songs=songs)
+        query = request.args.get('search')  # Get search query from the request parameters
+        if query:
+            # Filter songs based on the search query (case-insensitive)
+            songs = [song for song in songs if query.lower() in song.lower()]
+        return render_template('user_music.html', username=username, songs=songs, search_query=query)
     else:
         return "User not found", 404
 
